@@ -8,6 +8,7 @@ require 'axlsx_styler/axlsx_cell'
 Axlsx::Workbook.send :include, AxlsxStyler::Axlsx::Workbook
 Axlsx::Worksheet.send :include, AxlsxStyler::Axlsx::Worksheet
 Axlsx::Cell.send :include, AxlsxStyler::Axlsx::Cell
+Axlsx::Styles.send :include, AxlsxStyler::Axlsx::Styles
 
 module Axlsx
   class Package
