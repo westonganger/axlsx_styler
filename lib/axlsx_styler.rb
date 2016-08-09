@@ -48,7 +48,9 @@ module Axlsx
         unless style_index.nil?
           style_object = cellXfs[style_index]
 
-          unless font.nil?
+          if font.nil?
+            font = style_object.fontId
+          else
             font = parse_font_options(options, style_object.fontId)
           end
 
