@@ -40,18 +40,17 @@ module AxlsxStyler
       def set_style_index(cell)
         self.style_index ||= {}
 
-=begin
-        index_item = style_index.values.find{|x| x == cell.raw_style}
+        #index_item = style_index.values.find{|x| x == cell.raw_style}
+        index_item = style_index.values.find{|x| cell.raw_style}
         if index_item
           cell.style = index_item.first
         else
-=end
           old_style = cell.raw_style.dup
-          new_style = styles.add_style(cell.raw_style, cell.style)
-          cell.style = new_style
-          style_index[new_style] = old_style
-        #end
-
+          cell.raw_style
+          new_style_index = styles.add_style(cell.raw_style, cell.style, self.styles)
+          cell.style = new_style_index
+          style_index[new_style_index] = old_style
+        end
       end
     end
   end

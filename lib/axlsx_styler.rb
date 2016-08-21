@@ -48,23 +48,48 @@ module Axlsx
         unless style_index.nil?
           style_object = cellXfs[style_index]
 
-          if font.nil?
+          if font == 0
             font = style_object.fontId
-          else
+          elsif style_object.fontId != 0
             font = parse_font_options(options, style_object.fontId)
           end
 
-          fill ||= style_object.fillId
-          numFmt ||= style_object.numFmtId
-          border ||= style_object.borderId
-          alignment ||= style_object.alignment
-          protection ||= style_object.protection
+          if fill == 0
+            fill = style_object.fillId
+          end
+
+          if numFmt == 0
+            numFmt = style_object.numFmtId
+          end
+
+          if border == 0
+            border = style_object.borderId
+          end
+
+          if alignment == 0
+            alignment = style_object.alignment
+          end
+
+          if protection == 0
+            protection = style_object.protection
+          end
         end
 
-        style = Xf.new(fillId: (fill || 0), fontId: (font || 0), numFmtId: (numFmt || 0), borderId: (border || 0), alignment: alignment, protection: protection, applyFill: !fill.nil?, applyFont: !font.nil?, applyNumberFormat: !numFmt.nil?, applyBorder: !border.nil?, applyAlignment: !alignment.nil?, applyProtection: !protection.nil?)
+        existing_xf = cellXfs.find{|x| 
+          x.fillId == fill && 
+          x.fontId == font && 
+          x.numFmtId == numFmt && 
+          x.borderId == border && 
+          alignmentId == alignment && 
+          protectionId == protection
+        }
+
+        unless existing_xf
+          style = Xf.new(fillId: (fill || 0), fontId: (font || 0), numFmtId: (numFmt || 0), borderId: (border || 0), alignment: alignment, protection: protection, applyFill: !fill.nil?, applyFont: !font.nil?, applyNumberFormat: !numFmt.nil?, applyBorder: !border.nil?, applyAlignment: !alignment.nil?, applyProtection: !protection.nil?)
+        end
       end
 
-      if options[:type] == :xf
+      if options[:type] == :xf && !existing_xf
         cellXfs << style
       else
         dxfs << style

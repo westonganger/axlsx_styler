@@ -202,7 +202,7 @@ class IntegrationTest < MiniTest::Test
 
   # Overriding borders (part 1)
   def test_mixed_borders_1
-    @filename = 'mixed_borders_1'
+    filename = 'mixed_borders_1'
     @workbook.add_worksheet do |sheet|
       sheet.add_row
       sheet.add_row ['', '1', '2', '3']
@@ -218,7 +218,7 @@ class IntegrationTest < MiniTest::Test
 
   # Overriding borders (part 2)
   def test_mixed_borders
-    @filename = 'mixed_borders_2'
+    filename = 'mixed_borders_2'
     @workbook.add_worksheet do |sheet|
       sheet.add_row
       sheet.add_row ['', '1', '2', '3']
@@ -230,5 +230,38 @@ class IntegrationTest < MiniTest::Test
     @workbook.apply_styles
     assert_equal 8, @workbook.styled_cells.count
     assert_equal 6, @workbook.style_index.count
+  end
+
+  def test_merge_styles_1
+    filename = 'merge_styles_2'
+
+    bold = @workbook.styles.add_style b: true
+    @workbook.add_worksheet do |sheet|
+      sheet.add_row ['A1', 'B1'], style: [nil, bold]
+      sheet.add_row ['A2', 'B2']
+      sheet.add_style 'B1:B2', bg_color: 'ff0000'
+    end
+    @workbook.apply_styles
+    serialize(filename)
+    assert_equal 8, @workbook.styled_cells.count
+  end
+
+  def test_merge_styles_2
+    filename = 'merge_styles_2'
+
+    bold = @workbook.styles.add_style b: true
+
+    @workbook.add_worksheet do |sheet|
+      sheet.add_row ['A1', 'B1'], style: [nil, bold]
+      sheet.add_row ['A2', 'B2']
+      sheet.add_border 'A1:B2'
+    end
+    @workbook.apply_styles
+    serialize(filename)
+    assert_equal 8, @workbook.styled_cells.count
+  end
+
+  def test_merge_styles_3
+
   end
 end
